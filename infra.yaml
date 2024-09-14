@@ -1,5 +1,5 @@
 ---
   - name: Initial setup
-    hosts: all
+    hosts: web_servers
     roles:
-      - init
+      - nginx
