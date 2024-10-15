@@ -1,7 +1,17 @@
 ---
 - name: Initial setup
+  hosts: all
+  roles:
+    - init
+
+- name: Web Servers
   hosts: web_servers
   roles:
     - agama
     - uwsgi
     - nginx
+
+- name: Database server
+  hosts: db_servers
+  roles:
+    - mysql
