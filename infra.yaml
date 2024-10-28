@@ -1,8 +1,19 @@
 ---
 - name: Initial setup
   hosts: all
+  gather_facts: yes
   roles:
     - init
+
+- name: DNS Servers
+  hosts: dns_servers
+  roles:
+    - bind
+
+- name: Resolve
+  hosts: all
+  roles:
+    - resolver
 
 - name: Web Servers
   hosts: web_servers

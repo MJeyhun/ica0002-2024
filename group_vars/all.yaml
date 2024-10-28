@@ -1,4 +1,4 @@
-mysql_host: 192.168.42.176
+mysql_host: "{{ hostvars[groups['db_servers'][0]]['ansible_default_ipv4']['address'] }}"
 mysql_database: agama
 mysql_user: agama
 mysql_password: !vault |
@@ -8,3 +8,5 @@ mysql_password: !vault |
           38303564616430353239666263393030373937623061383765343131663961386362303737363730
           6438363634343061390a643838326435376262316561323036346231666262336432343862646664
           3166
+
+mydomain: yotto.ttu 
