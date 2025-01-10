@@ -4,6 +4,9 @@
   gather_facts: yes
   roles:
     - init
+  tags: i
+
+
 
 - name: DNS Servers
   hosts: dns_servers
@@ -26,3 +29,10 @@
   hosts: db_servers
   roles:
     - mysql
+
+- name: Prometheus server
+  hosts: prometheus_servers
+  roles:
+    - prometheus
+    - nginx
+  tags: p
