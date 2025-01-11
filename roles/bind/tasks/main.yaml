@@ -8,8 +8,7 @@
     name: bind9
     state: started
     enabled: true
-
-
+      
 - template:
     dest: /etc/bind/named.conf.{{ item }}
     src: bind.{{ item }}.j2
@@ -21,3 +20,42 @@
 - template:
     dest: /var/cache/bind/db.yotto.ttu
     src: db.yotto.ttu.j2
+
+- name: Extract Bind9 exporter
+  ansible.builtin.unarchive:
+    src: "https://github.com/prometheus-community/bind_exporter/releases/download/v0.6.1/bind_exporter-0.6.1.linux-amd64.tar.gz"
+    dest: "/opt/"
+    remote_src: yes
+
+- name: Create symlink for Bind9 exporter executable
+  file:
+    src: /opt/bind_exporter-0.6.1.linux-amd64/bind_exporter
+    dest: /usr/local/bin/prometheus-bind-exporter
+    state: link
+
+- name: Create systemd service for Bind9 exporter
+  copy:
+    dest: /etc/systemd/system/prometheus-bind-exporter.service
+    content: |
+      [Unit]
+      Description=Prometheus Bind9 Exporter
+      After=network.target
+
+      [Service]
+      Type=simple
+      ExecStart=/usr/local/bin/prometheus-bind-exporter
+      Restart=always
+
+      [Install]
+      WantedBy=multi-user.target
+
+
+- name: Reload systemd
+  command: systemctl daemon-reload
+
+- name: Start and enable Bind9 exporter service
+  systemd:
+    name: prometheus-bind-exporter
+    state: started
+    enabled: true
+

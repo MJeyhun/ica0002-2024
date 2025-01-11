@@ -1,14 +1,11 @@
-# Sample config for Prometheus.
 
 global:
   scrape_interval:     15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
   evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
 
 scrape_configs:
-  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
   - job_name: 'prometheus'
 
-    # Override the global default and scrape targets from this job every 5 seconds.
     scrape_interval: 5s
     scrape_timeout: 5s
 
@@ -19,9 +16,7 @@ scrape_configs:
     static_configs:
       - targets: ['localhost:9090']
 
-  - job_name: node
-    # If prometheus-node-exporter is installed, grab stats about the local
-    # machine by default.
+  - job_name: linux
     static_configs:
       - targets: [{% for vm in groups['all'] %}'{{ vm }}:9100'{% if not loop.last %}, {% endif %}{% endfor %}]
     scrape_interval: 5s
@@ -29,3 +24,21 @@ scrape_configs:
 
     # metrics_path defaults to '/metrics'
     # scheme defaults to 'http'.
+    
+  - job_name: mysql
+    static_configs:
+      - targets: [{% for vm in groups['db_servers'] %}'{{ vm }}:9104'{% if not loop.last %}, {% endif %}{% endfor %}]
+    scrape_interval: 5s
+    scrape_timeout: 5s
+
+  - job_name: bind9
+    static_configs:
+      - targets: [{% for vm in groups['dns_servers'] %}'{{ vm }}:9119'{% if not loop.last %}, {% endif %}{% endfor %}]
+    scrape_interval: 5s
+    scrape_timeout: 5s
+
+  - job_name: nginx
+    static_configs:
+      - targets: [{% for vm in groups['web_servers'] %}'{{ vm }}:9113'{% if not loop.last %}, {% endif %}{% endfor %}]
+    scrape_interval: 5s
+    scrape_timeout: 5s
