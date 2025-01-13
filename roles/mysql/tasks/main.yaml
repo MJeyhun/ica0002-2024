@@ -39,17 +39,18 @@
     host: "%"
     priv: "{{ mysql_database }}.*:ALL"
     login_unix_socket: /var/run/mysqld/mysqld.sock
+  no_log: true
+
+- name: Cnf files for exporter
+  template:
+    dest: /var/lib/prometheus/.my.cnf
+    src: my.cnf.j2
+  no_log: true
 
 - name: MYSQL exporter
   apt:
     name: prometheus-mysqld-exporter
     state: present
-
-- name: Ensure Prometheus MYSQL Exporter is started and enabled
-  ansible.builtin.systemd:
-    name: prometheus-mysqld-exporter
-    state: started
-    enabled: true
 
 - name: Create MySQL user for the exporter
   community.mysql.mysql_user:
@@ -58,9 +59,10 @@
     priv: "*.*:PROCESS,REPLICATION CLIENT"
     host: "%"
     login_unix_socket: /var/run/mysqld/mysqld.sock
+  no_log: true
 
-- name: Cnf files for exporter
-  template:
-    dest: /var/lib/prometheus/.my.cnf
-    src: my.cnf.j2
-  no_log: true 
+- name: Ensure Prometheus MYSQL Exporter is started and enabled
+  ansible.builtin.systemd:
+    name: prometheus-mysqld-exporter
+    state: started
+    enabled: true 

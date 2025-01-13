@@ -20,6 +20,29 @@
     name: grafana
     state: present
 
+- name: Provision Prometheus as default datasource
+  template:
+    src: datasources.yaml.j2
+    dest: /etc/grafana/provisioning/datasources/datasources.yaml
+  notify: Restart Grafana
+
+- name: Ensure destination directory exists
+  ansible.builtin.file:
+    path: /var/lib/grafana/dashboards
+    state: directory
+
+- name: Upload main.json to the server
+  ansible.builtin.copy:
+    src: main.json
+    dest: /var/lib/grafana/dashboards/main.json
+  notify: Restart Grafana
+
+- name: Provision Grafana dashboards
+  template:
+    src: dashboards.yaml.j2
+    dest: /etc/grafana/provisioning/dashboards/dashboards.yaml
+  notify: Restart Grafana
+
 - name: Start and enable Grafana server
   ansible.builtin.service:
     name: grafana-server
@@ -36,3 +59,5 @@
     src: grafana.ini.j2
     dest: /etc/grafana/grafana.ini
   notify: Restart Grafana
+
+
