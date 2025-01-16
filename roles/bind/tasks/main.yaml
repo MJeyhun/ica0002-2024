@@ -20,6 +20,7 @@
 - template:
     dest: /var/cache/bind/db.yotto.ttu
     src: db.yotto.ttu.j2
+  notify: restart bind
 
 - name: Extract Bind9 exporter
   ansible.builtin.unarchive:
