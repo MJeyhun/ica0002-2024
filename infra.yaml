@@ -46,3 +46,10 @@
   roles:
     - grafana
   tags: g
+
+- name: Influx Db
+  hosts: influxdb
+  roles:
+    - influxdb
+    - agama_client
+  tags: influx

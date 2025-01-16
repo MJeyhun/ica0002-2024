@@ -1,0 +1,4 @@
+- name: Restart agama-client
+  service:
+    name: agama-client
+    state: restarted

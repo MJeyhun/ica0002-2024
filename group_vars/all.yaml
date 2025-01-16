@@ -1,3 +1,7 @@
+corp_nets:
+  - 192.168.42.0/23
+  - 127.0.0.0/8
+
 mysql_host: "{{ hostvars[groups['db_servers'][0]]['ansible_default_ipv4']['address'] }}"
 mysql_database: agama
 mysql_user: agama
@@ -31,3 +35,4 @@ grafana_password: !vault |
           6138
 
 
+agama_client_db: influxdb_mj

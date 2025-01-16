@@ -37,6 +37,12 @@
     dest: /var/lib/grafana/dashboards/main.json
   notify: Restart Grafana
 
+- name: Upload syslog_dashboard.json to the server
+  ansible.builtin.copy:
+    src: syslog_dashboard.json
+    dest: /var/lib/grafana/dashboards/syslog_dashboard.json
+  notify: Restart Grafana
+
 - name: Provision Grafana dashboards
   template:
     src: dashboards.yaml.j2

@@ -1,0 +1,39 @@
+- name: Add InfluxData GPG key
+  ansible.builtin.apt_key:
+    url: https://repos.influxdata.com/influxdata-archive_compat.key
+    state: present
+    keyring: /etc/apt/keyrings/influxdata.gpg
+
+- name: Add InfluxData repository
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/etc/apt/keyrings/influxdata.gpg] https://repos.influxdata.com/debian stable main"
+    state: present
+    filename: influxdata
+
+- name: Update APT cache
+  ansible.builtin.apt:
+    update_cache: yes
+    cache_valid_time: 3600
+  
+- name: Install InfluxDB and Telegraf
+  ansible.builtin.apt:
+    name:
+      - influxdb
+      - telegraf
+    state: present
+
+- name: Telegraf configuration
+  template:
+    src: "telegraf.conf.j2"
+    dest: "/etc/telegraf/telegraf.conf"
+  notify:
+    - Restart Telegraf
+
+- name: Start and enable InfluxDB and Telegraf services
+  ansible.builtin.service:
+    name: "{{ item }}"
+    state: started
+    enabled: true
+  loop:
+    - influxdb
+    - telegraf

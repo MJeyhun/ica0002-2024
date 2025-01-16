@@ -9,3 +9,25 @@ datasources:
     isDefault: false
     version: 1
     editable: true
+
+  - name: InfluxDB
+    type: influxdb
+    access: proxy
+    orgId: 1
+    uid: fea3s2vigxbeoa
+    url: http://{{ groups['influxdb'][0] }}:8086
+    database: {{ agama_client_db }}
+    version: 1
+    isDefault: false
+    editable: true
+
+  - name: InfluxDB_Syslog
+    type: influxdb
+    access: proxy
+    orgId: 1
+    uid: aea459zkw32m8c
+    url: http://{{ groups['influxdb'][0] }}:8086
+    database: telegraf
+    version: 1
+    isDefault: false
+    editable: true

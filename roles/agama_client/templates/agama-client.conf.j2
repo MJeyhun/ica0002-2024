@@ -1,0 +1,3 @@
+database_url=http://{{ groups['influxdb'][0] }}:8086
+database_name={{ agama_client_db }}
+subnet={{ corp_nets[0] }}
