@@ -29,6 +29,35 @@
   notify:
     - Restart Telegraf
 
+- name: Download InfluxDB Stats Exporter binary
+  ansible.builtin.get_url:
+    url: "https://github.com/carlpett/influxdb_stats_exporter/releases/download/v0.1.1/influx_stats_exporter_linux_amd64"
+    dest: "/usr/local/bin/influxdb_stats_exporter"
+    mode: '0755'
+
+- name: Change ownership of the binary to prometheus user
+  ansible.builtin.file:
+    path: "/usr/local/bin/influxdb_stats_exporter"
+    owner: prometheus
+    group: prometheus
+    mode: '0755'
+
+- name: Deploy Prometheus InfluxDB Stats Exporter service file
+  ansible.builtin.template:
+    src: "prometheus_influxdb_stats_exporter.service.j2"
+    dest: "/etc/systemd/system/prometheus-influxdb-stats-exporter.service"
+
+- name: InfluxDB config file
+  template:
+    src: "influxdb.conf.j2"
+    dest: "/etc/influxdb/influxdb.conf"
+  notify:
+    - Restart InfluxDB
+
+- name: Reload Daemon
+  systemd:
+    daemon_reload: true
+
 - name: Start and enable InfluxDB and Telegraf services
   ansible.builtin.service:
     name: "{{ item }}"
@@ -37,3 +66,9 @@
   loop:
     - influxdb
     - telegraf
+
+- name: Start and enable Prometheus InfluxDB Stats Exporter service
+  ansible.builtin.systemd:
+    name: prometheus-influxdb-stats-exporter
+    enabled: true
+    state: started

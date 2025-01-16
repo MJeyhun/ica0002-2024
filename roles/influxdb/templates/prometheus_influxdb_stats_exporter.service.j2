@@ -1,0 +1,12 @@
+[Unit]
+Description=Prometheus InfluxDB Stats Exporter
+Documentation=https://github.com/carlpett/influxdb_stats_exporter
+After=network.target
+
+[Service]
+User=prometheus
+Environment="INFLUXDB_URL=http://{{ groups['influxdb'][0] }}:8086"
+ExecStart=/usr/local/bin/influxdb_stats_exporter
+
+[Install]
+WantedBy=multi-user.target
