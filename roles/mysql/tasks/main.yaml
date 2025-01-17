@@ -65,4 +65,47 @@
   ansible.builtin.systemd:
     name: prometheus-mysqld-exporter
     state: started
-    enabled: true 
+    enabled: true
+
+- name: Ensure /home/backup/mysql directory exists
+  ansible.builtin.file:
+    path: /home/backup/mysql
+    state: directory
+    owner: backup
+    group: backup
+    mode: '0755'
+
+- name: Create backup MySQL user and grant privileges
+  ansible.builtin.mysql_user:
+    name: backup
+    host: localhost
+    password: "{{ backup_mysql_password }}"
+    priv: "agama.*:SELECT,LOCK TABLES"
+    state: present
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+  no_log: true
+
+- name: Create .my.cnf for backup user
+  ansible.builtin.template:
+    src: "backup_my.cnf.j2"
+    dest: "/home/backup/.my.cnf"
+    owner: backup
+    group: backup
+    mode: '0600'
+  no_log: true
+
+- name: Ensure /etc/cron.d/mysql-backup is created
+  ansible.builtin.template:
+    src: mysql_backup.j2
+    dest: /etc/cron.d/mysql-backup
+    owner: root
+    group: root
+    mode: '0644'
+  notify: restart cron
+
+- name: start cron
+  service:
+    name: cron
+    state: started
+    enabled: true
+

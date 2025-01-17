@@ -33,15 +33,13 @@
 
 - name: Upload main.json to the server
   ansible.builtin.copy:
-    src: main.json
-    dest: /var/lib/grafana/dashboards/main.json
+    src: "{{ item }}"
+    dest: "/var/lib/grafana/dashboards/{{ item }}"
   notify: Restart Grafana
-
-- name: Upload syslog_dashboard.json to the server
-  ansible.builtin.copy:
-    src: syslog_dashboard.json
-    dest: /var/lib/grafana/dashboards/syslog_dashboard.json
-  notify: Restart Grafana
+  loop:
+    - main.json
+    - backups.json
+    - syslog_dashboard.json
 
 - name: Provision Grafana dashboards
   template:

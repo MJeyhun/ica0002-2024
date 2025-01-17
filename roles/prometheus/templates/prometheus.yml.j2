@@ -48,3 +48,9 @@ scrape_configs:
       - targets: [{% for vm in groups['influxdb'] %}'{{ vm }}:9424'{% if not loop.last %}, {% endif %}{% endfor %}]
     scrape_interval: 5s
     scrape_timeout: 5s
+
+  - job_name: backup
+    static_configs:
+      - targets: [backup.{{ mydomain }}:9111]
+    scrape_interval: 5s
+    scrape_timeout: 5s

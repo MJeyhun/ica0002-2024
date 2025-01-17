@@ -51,6 +51,7 @@
   ansible.builtin.user:
     name: backup
     home: /home/backup
+    shell: /bin/bash
     state: present
     create_home: yes
     generate_ssh_key: yes
@@ -63,3 +64,16 @@
     owner: backup
     group: backup
     mode: '0644'
+
+- name: Ensure /home/backup/restore directory exists
+  ansible.builtin.file:
+    path: /home/backup/restore
+    state: directory
+    owner: backup
+    group: backup
+    mode: '0755'
+
+- name: Install Duplicity
+  ansible.builtin.apt:
+    name: duplicity
+    state: present
