@@ -40,6 +40,7 @@
     - main.json
     - backups.json
     - syslog_dashboard.json
+    - mysql.json
 
 - name: Provision Grafana dashboards
   template:

@@ -10,11 +10,6 @@
     state: started
     enabled: yes
 
-#- name: Notify MySQL restart
-#  debug:
-#    msg: "Restarting MySQL to apply configuration changes"
-#  notify: Restart MySQL
-
 - name: MySQL override.cnf
   template:
     src: override.cnf.j2
@@ -31,6 +26,9 @@
   community.mysql.mysql_db:
     name: "{{ mysql_database }}"
     login_unix_socket: /var/run/mysqld/mysqld.sock
+  notify:
+    - Reset MySQL source
+    - Reset MySQL replica
 
 - name: MySQL user
   community.mysql.mysql_user:
@@ -45,6 +43,9 @@
   template:
     dest: /var/lib/prometheus/.my.cnf
     src: my.cnf.j2
+    owner: prometheus
+    group: prometheus
+    mode: '0600'
   no_log: true
 
 - name: MYSQL exporter
@@ -109,3 +110,22 @@
     state: started
     enabled: true
 
+- name: Create replication user with REPLICATION SLAVE permissions
+  community.mysql.mysql_user:
+    name: "{{ replication_username }}"
+    password: "{{ replication_user_password }}"
+    priv: "*.*:REPLICATION SLAVE"
+    host: "%"
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    state: present
+  no_log: true
+
+- name: Set MySQL read_only mode dynamically
+  community.mysql.mysql_variables:
+    variable: read_only
+    value: "{{ 'OFF' if inventory_hostname == mysql_primary else 'ON' }}"
+    mode: persist
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+  notify:
+    - Reset MySQL source
+    - Reset MySQL replica

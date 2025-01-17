@@ -3,6 +3,9 @@
 Install and configure infrastructure with Ansible:
     ansible-playbook infra.yaml
 
+Enter root user:
+    1. sudo -i
+
 Restore MySQL data from the backup:
     1. Download the backup from the remote server:
        sudo -u backup duplicity --no-encryption restore rsync://MJeyhun@backup.yotto.ttu/mysql /home/backup/restore/mysql
@@ -20,6 +23,9 @@ Verify the result:
 
 Install and configure infrastructure with Ansible:
     ansible-playbook infra.yaml
+
+Enter root user:
+    1. sudo -i
 
 Restore InfluxDB data from the backup:
     1. Download the backup from the remote server:

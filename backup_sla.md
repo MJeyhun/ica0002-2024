@@ -15,9 +15,9 @@ Services that are backed up:
 
 ## Schedule
 
-MySQL (agama database) backups are created every day at 00:15; it takes up to 3 minutes to create and store the backup.
+MySQL (agama database) backups are created every 24 hour; it takes up to 3 minutes to create and store the backup.
 
-InfluxDB (telegraf database) backups are created every day at 00:15; it takes up to 3 minutes to create and store the backup.
+InfluxDB (telegraf database) backups are created every 24 hour; it takes up to 3 minutes to create and store the backup.
 
 Ansible code git repository backups are created every 30 minutes; it takes up to 5 minutes to create and store the backup.
 

@@ -3,6 +3,7 @@ MJeyhun-2 ansible_host=193.40.156.67 ansible_port=2122 ansible_user=ubuntu
 
 [db_servers]
 MJeyhun-2
+MJeyhun-1
 
 [web_servers]
 MJeyhun-1
