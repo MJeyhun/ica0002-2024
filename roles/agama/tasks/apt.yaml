@@ -1,0 +1,29 @@
+- name:
+  apt:
+    cache_valid_time: 86400
+
+- name: Create user agama
+  ansible.builtin.user:
+    user: agama
+    state: present
+    shell: /bin/bash
+
+- name: Create /opt/agama directory
+  ansible.builtin.file:
+    path: /opt/agama
+    state: directory
+    owner: agama
+    group: agama
+    mode: '0755'
+
+- name: Install agama.py dependencies
+  apt:
+    name:
+      - python3-flask-sqlalchemy
+      - python3-pymysql
+    state: present
+
+- name: Installing agama.py
+  get_url:
+    url: https://raw.githubusercontent.com/hudolejev/agama/master/agama.py
+    dest: /opt/agama/agama.py

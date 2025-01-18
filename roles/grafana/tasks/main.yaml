@@ -1,68 +1,49 @@
-- name: Add Grafana GPG key
-  ansible.builtin.apt_key:
-    url: https://apt.grafana.com/gpg.key
-    state: present
-    keyring: /etc/apt/keyrings/grafana.gpg
-
-- name: Add Grafana repository
-  ansible.builtin.apt_repository:
-    repo: "deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com stable main"
-    state: present
-    filename: grafana
-
-- name: Update APT cache
-  ansible.builtin.apt:
-    update_cache: yes
-    cache_valid_time: 3600
-
-- name: Install Grafana OSS
-  ansible.builtin.apt:
-    name: grafana
-    state: present
-
-- name: Provision Prometheus as default datasource
-  template:
-    src: datasources.yaml.j2
-    dest: /etc/grafana/provisioning/datasources/datasources.yaml
-  notify: Restart Grafana
-
-- name: Ensure destination directory exists
+- name: Create directories for Grafana provisioning
   ansible.builtin.file:
-    path: /var/lib/grafana/dashboards
+    path: "/opt/grafana/provisioning/{{ item }}"
     state: directory
+    mode: '0755'
+  loop:
+    - dashboards
+    - datasources
+
+- name: Create Grafana configuration file from template
+  ansible.builtin.template:
+    src: grafana.ini.j2
+    dest: /opt/grafana/grafana.ini
+    mode: '0644'
+  no_log: true
+  notify:
+    - Restart Grafana container
+
+- name: Grafana Docker container
+  community.docker.docker_container:
+    image: grafana/grafana
+    name: grafana
+    published_ports: "{{ grafana_port }}:3000"
+    volumes: /opt/grafana:/etc/grafana 
+
+- name: Create Grafana configuration file from template
+  ansible.builtin.template:
+    src: dashboards.yaml.j2
+    dest: /opt/grafana/provisioning/dashboards/default.yaml
+  notify:
+    - Restart Grafana container
+
+- name: Create Grafana datasource provisioning file
+  ansible.builtin.template:
+    dest: /opt/grafana/provisioning/datasources/default.yaml
+    src: datasources.yaml.j2
+  notify:
+    - Restart Grafana container
 
 - name: Upload main.json to the server
   ansible.builtin.copy:
     src: "{{ item }}"
-    dest: "/var/lib/grafana/dashboards/{{ item }}"
-  notify: Restart Grafana
+    dest: "/opt/grafana/provisioning/dashboards/{{ item }}"
+  notify: Restart Grafana container
   loop:
     - main.json
     - backups.json
     - syslog_dashboard.json
     - mysql.json
-
-- name: Provision Grafana dashboards
-  template:
-    src: dashboards.yaml.j2
-    dest: /etc/grafana/provisioning/dashboards/dashboards.yaml
-  notify: Restart Grafana
-
-- name: Start and enable Grafana server
-  ansible.builtin.service:
-    name: grafana-server
-    state: started
-    enabled: true
-
-- name: Upload grafana deletion script
-  copy:
-    src: grafana_del.sh
-    dest: /opt/grafana_del.sh
-
-- name: Apply Grafana configuration from template
-  ansible.builtin.template:
-    src: grafana.ini.j2
-    dest: /etc/grafana/grafana.ini
-  notify: Restart Grafana
-
-

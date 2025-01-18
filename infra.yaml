@@ -24,7 +24,6 @@
   hosts: web_servers
   roles:
     - agama
-    - uwsgi
     - nginx
   tags: w
 
@@ -53,3 +52,9 @@
     - influxdb
     - agama_client
   tags: influx
+
+- name: Docker
+  hosts: docker
+  roles:
+    - docker
+  tags: do

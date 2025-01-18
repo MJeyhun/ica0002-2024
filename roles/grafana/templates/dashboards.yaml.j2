@@ -11,7 +11,7 @@ providers:
    disableDeletion: false
    updateIntervalSeconds: 10
    options:
-     path: /var/lib/grafana/dashboards/main.json
+     path: /etc/grafana/provisioning/dashboards/main.json
 
  - name: 'Syslog'
    orgId: 1
@@ -22,7 +22,7 @@ providers:
    disableDeletion: false
    updateIntervalSeconds: 10
    options:
-     path: /var/lib/grafana/dashboards/syslog_dashboard.json
+     path: /etc/grafana/provisioning/dashboards/syslog_dashboard.json
 
  - name: 'Backup'
    orgId: 1
@@ -33,7 +33,7 @@ providers:
    disableDeletion: false
    updateIntervalSeconds: 10
    options:
-     path: /var/lib/grafana/dashboards/backups.json
+     path: /etc/grafana/provisioning/dashboards/backups.json
 
  - name: 'MySQL'
    orgId: 1
@@ -44,4 +44,4 @@ providers:
    disableDeletion: false
    updateIntervalSeconds: 10
    options:
-     path: /var/lib/grafana/dashboards/mysql.json
+     path: /etc/grafana/provisioning/dashboards/mysql.json
