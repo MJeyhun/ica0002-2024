@@ -6,7 +6,11 @@
     - init
   tags: i
 
-
+- name: Docker
+  hosts: docker
+  roles:
+    - docker
+  tags: do
 
 - name: DNS Servers
   hosts: dns_servers
@@ -23,6 +27,7 @@
 - name: Web Servers
   hosts: web_servers
   roles:
+    - docker
     - agama
     - nginx
   tags: w
@@ -43,6 +48,7 @@
 - name: Grafana server
   hosts: grafana_servers
   roles:
+    - docker
     - grafana
   tags: g
 
@@ -53,8 +59,14 @@
     - agama_client
   tags: influx
 
-- name: Docker
-  hosts: docker
+- name: Haproxy
+  hosts: haproxy
   roles:
-    - docker
-  tags: do
+    - haproxy
+  tags: ha
+
+- name: Keepalived
+  hosts: keepalived
+  roles:
+    - keepalived
+  tags: k

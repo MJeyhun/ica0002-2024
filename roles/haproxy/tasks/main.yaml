@@ -1,0 +1,27 @@
+- name: Install HAProxy and HAProxy Exporter
+  apt:
+    name: 
+      - haproxy
+      - prometheus-haproxy-exporter
+    state: present
+
+- name: Config file for HAProxy
+  template:
+    src: haproxy.cfg.j2
+    dest: /etc/haproxy/haproxy.cfg
+  notify: restart haproxy
+
+- name: Config file for exporter
+  template:
+    src: prometheus-haproxy-exporter.j2
+    dest: /etc/default/prometheus-haproxy-exporter
+  notify: prometheus-haproxy-exporter restart
+
+- name: start HAProxy service and exporter
+  service:
+    name: "{{ item }}"
+    state: started
+  loop:
+    - haproxy
+    - prometheus-haproxy-exporter
+

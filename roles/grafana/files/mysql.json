@@ -83,7 +83,7 @@
           "values": false
         },
         "showPercentChange": false,
-        "textMode": "auto",
+        "textMode": "value_and_name",
         "wideLayout": true
       },
       "pluginVersion": "11.4.0",
@@ -142,7 +142,7 @@
       },
       "gridPos": {
         "h": 5,
-        "w": 6,
+        "w": 5,
         "x": 5,
         "y": 0
       },
@@ -161,7 +161,7 @@
           "values": false
         },
         "showPercentChange": false,
-        "textMode": "auto",
+        "textMode": "value_and_name",
         "wideLayout": true
       },
       "pluginVersion": "11.4.0",
@@ -207,7 +207,7 @@
       "gridPos": {
         "h": 5,
         "w": 6,
-        "x": 11,
+        "x": 10,
         "y": 0
       },
       "id": 3,
@@ -285,7 +285,7 @@
       "gridPos": {
         "h": 5,
         "w": 6,
-        "x": 17,
+        "x": 16,
         "y": 0
       },
       "id": 2,
@@ -377,32 +377,7 @@
             ]
           }
         },
-        "overrides": [
-          {
-            "__systemRef": "hideSeriesFrom",
-            "matcher": {
-              "id": "byNames",
-              "options": {
-                "mode": "exclude",
-                "names": [
-                  "MJeyhun-2:9104"
-                ],
-                "prefix": "All except:",
-                "readOnly": true
-              }
-            },
-            "properties": [
-              {
-                "id": "custom.hideFrom",
-                "value": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": true
-                }
-              }
-            ]
-          }
-        ]
+        "overrides": []
       },
       "gridPos": {
         "h": 8,
@@ -529,6 +504,6 @@
   "timezone": "browser",
   "title": "MySQL",
   "uid": "aeaak6vi03thcc",
-  "version": 6,
+  "version": 2,
   "weekStart": ""
 }

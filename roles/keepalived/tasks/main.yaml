@@ -1,0 +1,65 @@
+- name: Install Keepalived
+  apt:
+    name: keepalived
+    state: present
+
+- name: Download Keepalived exporter package
+  ansible.builtin.get_url:
+    url: "http://backup/keepalived-exporter_1.4.0_linux_amd64.deb"
+    dest: "/opt/keepalived-exporter_1.4.0_linux_amd64.deb"
+
+- name: Install Keepalived exporter
+  ansible.builtin.apt:
+    deb: "/opt/keepalived-exporter_1.4.0_linux_amd64.deb"
+    state: present
+
+- name: Deploy Keepalived Exporter service file
+  ansible.builtin.template:
+    src: prometheus-keepalived-exporter.service.j2
+    dest: /etc/systemd/system/prometheus-keepalived-exporter.service
+  notify: Restart prometheus-keepalived-exporter
+
+- name: Reload Daemon
+  systemd:
+    daemon_reload: true
+
+- name: Ensure keepalived_script user exists
+  ansible.builtin.user:
+    name: keepalived_script
+    shell: /bin/bash
+    state: present
+
+- name: Ensure keepalived_script home directory exists
+  ansible.builtin.file:
+    path: /home/keepalived_script
+    state: directory
+    owner: keepalived_script
+    group: keepalived_script
+    mode: '0755'
+
+- name: Deploy check script for port 88
+  copy:
+    src: check_haproxy.sh
+    dest: /home/keepalived_script/check_haproxy.sh
+    owner: keepalived_script
+    group: keepalived_script
+    mode: '0755'
+
+- name: Deploy keepalived.conf
+  template:
+    src: keepalived.conf.j2
+    dest: /etc/keepalived/keepalived.conf
+  notify: Restart Keepalived
+  no_log: true
+
+- name: Enable and start Keepalived service
+  ansible.builtin.systemd:
+    name: keepalived
+    enabled: yes
+    state: started
+
+- name: Ensure prometheus-keepalived-exporter service is enabled and started
+  ansible.builtin.service:
+    name: prometheus-keepalived-exporter
+    state: started
+    enabled: true
