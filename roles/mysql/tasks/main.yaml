@@ -129,3 +129,19 @@
   notify:
     - Reset MySQL source
     - Reset MySQL replica
+
+- name: Add CNAME records for MYSQL
+  nsupdate:
+    key_name: "dns_update_key"
+    key_algorithm: "hmac-sha256"
+    key_secret: "{{ dns_update_key }}"
+    server: "127.0.0.1"
+    zone: "{{ mydomain }}."
+    record: "{{ item.key }}"
+    type: "CNAME"
+    value: "{{ item.value }}"
+  loop: "{{ database_records | dict2items }}"
+  run_once: True
+  notify: reload rndc
+  no_log: true
+  delegate_to: "{{ groups['dns_masters'][0] }}"

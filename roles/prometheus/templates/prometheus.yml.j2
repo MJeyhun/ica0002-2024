@@ -27,25 +27,25 @@ scrape_configs:
     
   - job_name: mysql
     static_configs:
-      - targets: [{% for vm in groups['db_servers'] %}'{{ vm }}:9104'{% if not loop.last %}, {% endif %}{% endfor %}]
+      - targets: ['db-1:9104','db-2:9104']
     scrape_interval: 5s
     scrape_timeout: 5s
 
   - job_name: bind9
     static_configs:
-      - targets: [{% for vm in groups['dns_servers'] %}'{{ vm }}:9119'{% if not loop.last %}, {% endif %}{% endfor %}]
+      - targets: ['ns-1:9119','ns-2:9119']
     scrape_interval: 5s
     scrape_timeout: 5s
 
   - job_name: nginx
     static_configs:
-      - targets: [{% for vm in groups['all'] %}'{{ vm }}:9113'{% if not loop.last %}, {% endif %}{% endfor %}]
+      - targets: ['www-1:9113','www-2:9113']
     scrape_interval: 5s
     scrape_timeout: 5s
 
   - job_name: influxdb-stats
     static_configs:
-      - targets: [{% for vm in groups['influxdb'] %}'{{ vm }}:9424'{% if not loop.last %}, {% endif %}{% endfor %}]
+      - targets: ['influxdb:9424']
     scrape_interval: 5s
     scrape_timeout: 5s
 
@@ -57,7 +57,7 @@ scrape_configs:
 
   - job_name: haproxy
     static_configs:
-      - targets: [{% for vm in groups['haproxy'] %}'{{ vm }}:9101'{% if not loop.last %}, {% endif %}{% endfor %}] 
+      - targets: ['lb-1:9101','lb-2:9101'] 
     scrape_interval: 5s
     scrape_timeout: 5s
 

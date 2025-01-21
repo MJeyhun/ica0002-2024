@@ -1,5 +1,7 @@
----
 - name: restart bind
   service:
     name: bind9
-    state: restarted 
+    state: restarted
+
+- name: reload rndc
+  command: rndc reload

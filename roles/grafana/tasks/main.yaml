@@ -50,3 +50,20 @@
     - backups.json
     - syslog_dashboard.json
     - mysql.json
+
+- name: Add CNAME records for Grafana
+  nsupdate:
+    key_name: "dns_update_key"
+    key_algorithm: "hmac-sha256"
+    key_secret: "{{ dns_update_key }}"
+    server: "127.0.0.1"
+    zone: "{{ mydomain }}."
+    record: "{{ item.key }}"
+    type: "CNAME"
+    value: "{{ item.value }}"
+  loop: "{{ grafana_records | dict2items }}"
+  run_once: True
+  no_log: true
+  notify: reload rndc
+  delegate_to: "{{ groups['dns_masters'][0] }}"
+

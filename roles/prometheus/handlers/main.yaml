@@ -7,3 +7,6 @@
   ansible.builtin.service:
     name: prometheus
     state: restarted
+
+- name: reload rndc
+  command: rndc reload
