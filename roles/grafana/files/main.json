@@ -109,7 +109,7 @@
             "uid": "be9wall15qn0gf"
           },
           "editorMode": "code",
-          "expr": "rate(bind_resolver_queries_total{type=\"A\"}[1m])",
+          "expr": "rate(bind_resolver_queries_total{instance=\"ns-1:9119\", type=\"A\"}[1m])",
           "hide": false,
           "instant": false,
           "legendFormat": "{{instance}}",
@@ -438,7 +438,7 @@
       "targets": [
         {
           "editorMode": "code",
-          "expr": "haproxy_server_up{instance=\"MJeyhun-1:9101\"}",
+          "expr": "haproxy_server_up{instance=\"lb-1:9101\"}",
           "legendFormat": "{{instance}}:{{server}}",
           "range": true,
           "refId": "A"
@@ -594,7 +594,7 @@
       "targets": [
         {
           "editorMode": "code",
-          "expr": "haproxy_server_up{instance=\"MJeyhun-2:9101\"}",
+          "expr": "haproxy_server_up{instance=\"lb-2:9101\"}",
           "legendFormat": "{{instance}}:{{server}}",
           "range": true,
           "refId": "A"
@@ -670,7 +670,7 @@
         "x": 0,
         "y": 6
       },
-      "id": 4,
+      "id": 19,
       "options": {
         "legend": {
           "calcs": [],
@@ -686,14 +686,20 @@
       "pluginVersion": "11.4.0",
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "be9wall15qn0gf"
+          },
           "editorMode": "code",
-          "expr": "rate(mysql_global_status_commands_total{command=\"select\"}[1m])",
+          "expr": "rate(bind_resolver_queries_total{instance=\"ns-2:9119\", type=\"A\"}[1m])",
+          "hide": false,
+          "instant": false,
           "legendFormat": "{{instance}}",
           "range": true,
-          "refId": "A"
+          "refId": "B"
         }
       ],
-      "title": "MySQL  SELECT Commands per Minute",
+      "title": "A DNS Queries per Minute",
       "type": "timeseries"
     },
     {
@@ -849,7 +855,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 5,
         "w": 5,
         "x": 6,
         "y": 7
@@ -1038,6 +1044,99 @@
     },
     {
       "datasource": {
+        "type": "prometheus",
+        "uid": "be9wall15qn0gf"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 6,
+        "x": 0,
+        "y": 12
+      },
+      "id": 4,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.4.0",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "rate(mysql_global_status_commands_total{command=\"select\"}[1m])",
+          "legendFormat": "{{instance}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "MySQL  SELECT Commands per Minute",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
         "uid": "fea3s2vigxbeoa"
       },
       "fieldConfig": {
@@ -1080,8 +1179,8 @@
       },
       "gridPos": {
         "h": 4,
-        "w": 3,
-        "x": 0,
+        "w": 2,
+        "x": 6,
         "y": 12
       },
       "id": 9,
@@ -1176,7 +1275,7 @@
       "gridPos": {
         "h": 4,
         "w": 3,
-        "x": 3,
+        "x": 8,
         "y": 12
       },
       "id": 10,
@@ -1204,10 +1303,41 @@
             "type": "influxdb",
             "uid": "fea3s2vigxbeoa"
           },
-          "query": "SELECT *\nFROM \"agama-stats\" \nWHERE \"name\" = 'mjeyhun-1' \n",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT *\nFROM \"agama-stats\" \nWHERE \"name\" = 'MJeyhun-1.yotto.ttu.'",
           "rawQuery": true,
           "refId": "A",
-          "resultFormat": "time_series"
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
         }
       ],
       "title": "Current number of items in my Agama",
@@ -1432,8 +1562,8 @@
       },
       "gridPos": {
         "h": 3,
-        "w": 6,
-        "x": 0,
+        "w": 5,
+        "x": 6,
         "y": 16
       },
       "id": 7,
@@ -1562,6 +1692,6 @@
   "timezone": "browser",
   "title": "Main",
   "uid": "ce9wbbjq8x9tsd",
-  "version": 7,
+  "version": 9,
   "weekStart": ""
 }
