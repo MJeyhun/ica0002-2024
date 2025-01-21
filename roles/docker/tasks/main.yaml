@@ -2,7 +2,8 @@
   apt:
     name: docker.io
     state: present
-    
+
+
 - name: Install Python Docker library
   apt:
     name: python3-docker
@@ -13,3 +14,8 @@
     name: docker
     state: started
     enabled: yes
+
+- name: Log into DockerHub
+  community.docker.docker_login:
+    username: mjeyhun
+    password: "{{ docker_pass }}"

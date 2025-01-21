@@ -189,7 +189,7 @@
       "targets": [
         {
           "editorMode": "code",
-          "expr": "up{job=\"bind9\"}",
+          "expr": "bind_up",
           "legendFormat": "{{instance}}",
           "range": true,
           "refId": "A"
@@ -1685,13 +1685,13 @@
     "list": []
   },
   "time": {
-    "from": "now-5m",
+    "from": "now-5s",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "Main",
   "uid": "ce9wbbjq8x9tsd",
-  "version": 9,
+  "version": 2,
   "weekStart": ""
 }

@@ -1,5 +1,6 @@
-MJeyhun-1 ansible_host=193.40.156.67 ansible_port=13822 ansible_user=ubuntu
-MJeyhun-2 ansible_host=193.40.156.67 ansible_port=11322 ansible_user=ubuntu
+MJeyhun-1 ansible_host=193.40.156.67 ansible_port=1922 ansible_user=ubuntu
+MJeyhun-2 ansible_host=193.40.156.67 ansible_port=4022 ansible_user=ubuntu
+MJeyhun-3 ansible_host=193.40.156.67 ansible_port=13022 ansible_user=ubuntu
 
 [db_servers]
 MJeyhun-1
@@ -10,9 +11,10 @@ MJeyhun-1
 MJeyhun-2
 
 [dns_masters]
-MJeyhun-1
+MJeyhun-3
 
 [dns_slaves]
+MJeyhun-1
 MJeyhun-2
 
 [dns_servers:children]
@@ -20,13 +22,13 @@ dns_masters
 dns_slaves
 
 [prometheus_servers]
-MJeyhun-2
+MJeyhun-3
 
 [grafana_servers]
-MJeyhun-2
+MJeyhun-3
 
 [influxdb]
-MJeyhun-2
+MJeyhun-3
 
 [docker]
 MJeyhun-2
